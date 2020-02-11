@@ -16,5 +16,5 @@ dependencies {
     compile 'io.javalin:javalin:3.7.0'
     compile 'org.slf4j:slf4j-simple:1.7.26'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
-    compile 'org.xerial:sqlite-jdbc:3.27.2.1'
+    compile 'org.xerial:sqlite-jdbc:3.30.1'
 }
