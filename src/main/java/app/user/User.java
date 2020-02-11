@@ -1,14 +1,13 @@
 package app.user;
 
 public class User {
-    public final String username;
-    public final String salt;
-    public final String hashedPassword;
+    public final int id;
+    public final String name;
 
-    public User(String username, String salt, String hashedPassword) {
-        this.username = username;
-        this.salt = salt;
-        this.hashedPassword = hashedPassword;
+    public User(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
+
 }
 
