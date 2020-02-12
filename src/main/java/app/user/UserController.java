@@ -35,7 +35,9 @@ public class UserController {
                 ctx.formParam("phone")
         );
         userRepository.createUser(temp);
-        System.out.println(ctx.formParam("password"));
+
+        //ctx.sessionAttribute("loginRedirect", ctx.path());
+        ctx.render("public/login/login.html");
         ctx.status(201);
     }
 
