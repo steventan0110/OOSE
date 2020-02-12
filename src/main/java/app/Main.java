@@ -34,7 +34,8 @@ public class Main {
             path("auth", ()->{
                 path("create",()->{
                     post(UserController::createUser);
-                    get(ctx -> ctx.render("/public/login/login.html"));
+
+                    get(ctx -> ctx.redirect("/public/login/login.html"));
                 });
             });
             path("user",()-> {
