@@ -1,4 +1,5 @@
 package app;
+import app.login.LoginController;
 import app.user.UserController;
 import app.user.UserRepository;
 import io.javalin.Javalin;
@@ -28,12 +29,13 @@ public class Main {
         //definition of routes:
         //TODO:the frontend interaction is not defined for the controller yet!
         app.routes(()-> {
-           path("user",()-> {
-              get(UserController::getAll);
-              post(UserController::createUser);
-               path(":id", ()-> {
-                  delete(UserController::delete);
-                  put(UserController::update);
+            before(LoginController.ensureLogin);
+            path("user",()-> {
+                get(UserController::getAll);
+                post(UserController::createUser);
+                path(":id", ()-> {
+                    delete(UserController::delete);
+                    put(UserController::update);
                });
            });
         });
