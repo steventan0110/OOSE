@@ -25,8 +25,13 @@ public class UserRepositoryTest {
         unit = new UserRepository(connection);
 
         Statement statement = connection.createStatement();
-        String sql = "CREATE TABLE IF NOT EXISTS users " +
-                "(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)";
+        String sql ="CREATE TABLE IF NOT EXISTS users " +
+                "(id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "name TEXT, " +
+                "password VARCHAR(30), " +
+                "email VARCHAR(30), " +
+                "role VARCHAR(20), " +
+                "phone INTEGER)";
         statement.execute(sql);
     }
 
@@ -39,18 +44,27 @@ public class UserRepositoryTest {
     }
     @Test
     public void createUser() throws SQLException {
-        User user = new User("Steven");
+        User user = new User(
+                "Steven",
+                "1234567",
+                "abc@gmail.com",
+                1,
+                "1029340144"
+        );
         assertEquals(0, user.getId());
         unit.createUser(user);
         assertEquals(1, user.getId());
-        User user2 = new User("Shuhao");
-        unit.createUser(user2);
-        assertEquals(2, user2.getId());
     }
 
     @Test
     public void getOneUser() throws SQLException, UserNotFoundException {
-        User user = new User("Steven");
+        User user = new User(
+                "Steven",
+                "1234567",
+                "abc@gmail.com",
+                1,
+                "1029340144"
+        );
         unit.createUser(user);
         assertEquals(1, unit.getOneUser(1).getId());
         assertEquals("Steven", unit.getOneUser(1).getName());
@@ -63,9 +77,27 @@ public class UserRepositoryTest {
 
     @Test
     public void getAll() throws SQLException {
-        User user = new User("Steven");
-        User user1 = new User("Steven1");
-        User user2 = new User("Steven2");
+        User user = new User(
+                "Steven",
+                "1234567",
+                "abc@gmail.com",
+                1,
+                "1029340144"
+        );
+        User user1 = new User(
+                "Steven1",
+                "1234567",
+                "abc@gmail.com",
+                1,
+                "1029340144"
+        );
+        User user2 = new User(
+                "Steven2",
+                "1234567",
+                "abc@gmail.com",
+                1,
+                "1029340144"
+        );
         unit.createUser(user);
         unit.createUser(user1);
         unit.createUser(user2);
@@ -80,9 +112,21 @@ public class UserRepositoryTest {
 
     @Test
     public void update() throws SQLException, UserNotFoundException {
-        User user = new User("Steven");
+        User user = new User(
+                "Steven",
+                "1234567",
+                "abc@gmail.com",
+                1,
+                "1029340144"
+        );
         unit.createUser(user);
-        User new_user = new User("StevenTan");
+        User new_user = new User(
+                "StevenTan",
+                "1234567",
+                "abc@gmail.com",
+                1,
+                "1029340144"
+        );
         new_user.setId(user.getId());
         unit.update(new_user);
         assertEquals("StevenTan", unit.getOneUser(user.getId()).getName());
@@ -90,16 +134,34 @@ public class UserRepositoryTest {
 
     @Test(expected = UserNotFoundException.class)
     public void updateUserNotFound() throws SQLException, UserNotFoundException {
-        User user = new User("Steven");
+        User user = new User(
+                "Steven",
+                "1234567",
+                "abc@gmail.com",
+                1,
+                "1029340144"
+        );
         unit.createUser(user);
-        User new_user = new User("StevenTan");
+        User new_user = new User(
+                "Steven",
+                "1234567",
+                "abc@gmail.com",
+                1,
+                "1029340144"
+        );
         new_user.setId(user.getId()+1);
         unit.update(new_user);
     }
 
     @Test
     public void delete() throws SQLException, UserNotFoundException {
-        User user = new User("Steven");
+        User user = new User(
+                "Steven",
+                "1234567",
+                "abc@gmail.com",
+                1,
+                "1029340144"
+        );
         unit.createUser(user);
         assertEquals(1, unit.getOneUser(1).getId());
         unit.delete(user);

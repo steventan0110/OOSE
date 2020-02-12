@@ -26,13 +26,18 @@ public class Main {
         app.get("/createAccount", ctx-> {
            ctx.render("/public/login/createAccount.html");
         });
+
         //definition of routes:
         //TODO:the frontend interaction is not defined for the controller yet!
         app.routes(()-> {
             before(LoginController.ensureLogin);
+            path("auth", ()->{
+                path("create",()->{
+                    post(UserController::createUser);
+                });
+            });
             path("user",()-> {
                 get(UserController::getAll);
-                post(UserController::createUser);
                 path(":id", ()-> {
                     delete(UserController::delete);
                     put(UserController::update);
@@ -44,7 +49,7 @@ public class Main {
         app.events(event -> {
             event.serverStopped(() -> {connection.close();});
         });
-        app.start(8080);
+        app.start(12000);
 
     }
 }

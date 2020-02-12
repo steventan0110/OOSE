@@ -17,9 +17,25 @@ public class UserController {
         ctx.json(userRepository.getAll());
     }
     public void createUser(Context ctx) throws SQLException {
-        User temp = new User(ctx.formParam("name"));
+        String ctx_role = ctx.formParam("role");
+        int role = 0;
+        if (ctx_role.equals("Instructor")) {
+            role = 1;
+        } else if (ctx_role.equals("Student")) {
+            role = 2;
+        } else {
+            role = 3;
+        }
+        System.out.println(ctx.formParam("phone"));
+        User temp = new User(
+                ctx.formParam("name"),
+                ctx.formParam("password"),
+                ctx.formParam("email"),
+                role,
+                ctx.formParam("phone")
+        );
         userRepository.createUser(temp);
-        System.out.println(ctx.formParam("name"));
+        System.out.println(ctx.formParam("password"));
         ctx.status(201);
     }
 
