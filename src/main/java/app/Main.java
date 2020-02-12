@@ -1,4 +1,5 @@
 package app;
+import app.login.LoginController;
 import app.user.UserController;
 import app.user.UserRepository;
 import io.javalin.Javalin;
@@ -18,21 +19,38 @@ public class Main {
         UserController UserController = new UserController(UserRepository);
         Javalin app = Javalin.create(config -> { config.addStaticFiles("/public"); });
 
+        //before -> direct to login page
+        app.get("/auth", ctx -> {
+            ctx.render("/public/login/login.html");
+        });
+        app.get("/createAccount", ctx-> {
+           ctx.render("/public/login/createAccount.html");
+        });
+
         //definition of routes:
+        //TODO:the frontend interaction is not defined for the controller yet!
         app.routes(()-> {
-           path("user",()-> {
-              get(UserController::getAll);
-//              post(UserController::create);
+            before(LoginController.ensureLogin);
+            path("auth", ()->{
+                path("create",()->{
+                    post(UserController::createUser);
+                    get(ctx -> ctx.render("/public/login/login.html"));
+                });
+            });
+            path("user",()-> {
+                get(UserController::getAll);
+                path(":id", ()-> {
+                    delete(UserController::delete);
+                    put(UserController::update);
+               });
            });
         });
-        app.error(404, ctx -> ctx.result("Your requested Page is not found!"));
-//        app.get("/users", UserController.fetchAllUsernames);
-//        app.get("/users/:id", UserController.fetchById);
 
+        app.error(404, ctx -> ctx.result("Your requested Page is not found!"));
         app.events(event -> {
             event.serverStopped(() -> {connection.close();});
         });
-        app.start(8080);
+        app.start(12000);
 
     }
 }

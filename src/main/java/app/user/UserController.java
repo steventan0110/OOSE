@@ -16,27 +16,42 @@ public class UserController {
     public void getAll(Context ctx) throws SQLException {
         ctx.json(userRepository.getAll());
     }
-//    public void create(Context ctx) throws SQLException {
-//        userRepository.create();
-//        ctx.status(201);
-//    }
+    public void createUser(Context ctx) throws SQLException {
+        String ctx_role = ctx.formParam("role");
+        int role = 0;
+        if (ctx_role.equals("Instructor")) {
+            role = 1;
+        } else if (ctx_role.equals("Student")) {
+            role = 2;
+        } else {
+            role = 3;
+        }
+        System.out.println(ctx.formParam("phone"));
+        User temp = new User(
+                ctx.formParam("name"),
+                ctx.formParam("password"),
+                ctx.formParam("email"),
+                role,
+                ctx.formParam("phone")
+        );
+        userRepository.createUser(temp);
 
-//    public static Handler fetchAllUsernames = ctx-> {
-//        UserDao dao = UserDao.instance();
-//        Iterable<String> allUsers = dao.getAllUsernames();
-//        ctx.json(allUsers);
-//    };
-//
-//    public static Handler fetchById = ctx -> {
-//        int id = Integer.parseInt(Objects.requireNonNull(ctx.queryParam("id")));
-//        UserDao dao = UserDao.instance();
-//        Optional<User> user = dao.getUserById(id);
-//        if (!user.isPresent()) {
-//            ctx.html("Not Found");
-//        } else {
-//            User temp = user.get();
-//            System.out.println(temp);
-//            ctx.json(temp);
-//        }
-//    };
+        //ctx.sessionAttribute("loginRedirect", ctx.path());
+        ctx.render("public/login/login.html");
+        ctx.status(201);
+    }
+
+    public void update(Context ctx) throws SQLException, UserNotFoundException {
+        User temp = userRepository.getOneUser(Integer.parseInt(ctx.pathParam("id")));
+        temp.setName(ctx.formParam("name"));
+        userRepository.update(temp);
+        ctx.status(204);
+    }
+
+    public void delete(Context ctx) throws SQLException, UserNotFoundException {
+        userRepository.delete(userRepository.getOneUser(Integer.parseInt(ctx.pathParam("id"))));
+        ctx.status(204);
+    }
+
+
 }
