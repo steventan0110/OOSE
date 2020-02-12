@@ -19,16 +19,19 @@ public class Main {
         Javalin app = Javalin.create(config -> { config.addStaticFiles("/public"); });
 
         //definition of routes:
+        //TODO:the frontend interaction is not defined for the controller yet!
         app.routes(()-> {
            path("user",()-> {
               get(UserController::getAll);
 //              post(UserController::create);
+               path(":id", ()-> {
+                  delete(UserController::delete);
+                  put(UserController::update);
+               });
            });
         });
-        app.error(404, ctx -> ctx.result("Your requested Page is not found!"));
-//        app.get("/users", UserController.fetchAllUsernames);
-//        app.get("/users/:id", UserController.fetchById);
 
+        app.error(404, ctx -> ctx.result("Your requested Page is not found!"));
         app.events(event -> {
             event.serverStopped(() -> {connection.close();});
         });

@@ -31,16 +31,34 @@ public class UserRepository {
         pst.close();
     }
 
+    public User getOneUser(int id) throws SQLException, UserNotFoundException {
+        String oneUserURL = "SELECT id, name FROM users WHERE id = ?";
+        PreparedStatement pst = connection.prepareStatement(oneUserURL);
+        pst.setInt(1, id);
+        ResultSet rs = pst.executeQuery();
+        try {
+            if (rs.next()) {
+                User temp = new User(rs.getString("name"));
+                temp.setId(rs.getInt("id"));
+                return temp;
+            } else {
+                throw new UserNotFoundException();
+            }
+        }
+        finally {
+            pst.close();
+            rs.close();
+        }
+    }
+
     public List<User> getAll() throws SQLException {
         List<User> User = new ArrayList<User>();
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery("SELECT id, name FROM users");
         while (result.next()) {
-            User.add(
-                    new User(
-                            result.getString("name")
-                    )
-            );
+            User temp = new User(result.getString("name"));
+            temp.setId(result.getInt("id"));
+            User.add(temp);
         }
         result.close();
         statement.close();
@@ -54,6 +72,18 @@ public class UserRepository {
         pst.setInt(2, user.getId());
         try {
             //check if any update is made
+            if (pst.executeUpdate() == 0) throw new UserNotFoundException();
+        }
+        finally {
+            pst.close();
+        }
+    }
+
+    public void delete(User user) throws SQLException, UserNotFoundException {
+        String deleteURL = "DELETE FROM users WHERE id = ?";
+        PreparedStatement pst = connection.prepareStatement(deleteURL);
+        pst.setInt(1,user.getId());
+        try {
             if (pst.executeUpdate() == 0) throw new UserNotFoundException();
         }
         finally {
