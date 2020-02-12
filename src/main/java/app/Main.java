@@ -18,12 +18,19 @@ public class Main {
         UserController UserController = new UserController(UserRepository);
         Javalin app = Javalin.create(config -> { config.addStaticFiles("/public"); });
 
+        //before -> direct to login page
+        app.get("/auth", ctx -> {
+            ctx.render("/public/login/login.html");
+        });
+        app.get("/createAccount", ctx-> {
+           ctx.render("/public/login/createAccount.html");
+        });
         //definition of routes:
         //TODO:the frontend interaction is not defined for the controller yet!
         app.routes(()-> {
            path("user",()-> {
               get(UserController::getAll);
-//              post(UserController::create);
+              post(UserController::createUser);
                path(":id", ()-> {
                   delete(UserController::delete);
                   put(UserController::update);

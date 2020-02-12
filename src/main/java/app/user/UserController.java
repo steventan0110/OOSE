@@ -19,6 +19,7 @@ public class UserController {
     public void createUser(Context ctx) throws SQLException {
         User temp = new User(ctx.formParam("name"));
         userRepository.createUser(temp);
+        System.out.println(ctx.formParam("name"));
         ctx.status(201);
     }
 
