@@ -50,7 +50,7 @@
             <a href="#" class="pull-right">Forgot Password?</a>
         </div>
     </form>
-    <p class="text-center"><a href="/createAccount">Create an Account</a></p>
+    <p class="text-center"><a href="/auth/create">Create an Account</a></p>
 </div>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package app.user;
 
 import app.login.LoginController;
+import app.util.Path;
 import app.util.viewUtil;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
@@ -19,6 +20,7 @@ public class UserController {
     public void getAll(Context ctx) throws SQLException {
         ctx.json(userRepository.getAll());
     }
+
     public void createUser(Context ctx) throws SQLException {
         String ctx_role = ctx.formParam("role");
         int role = 0;

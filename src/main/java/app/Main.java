@@ -2,6 +2,7 @@ package app;
 import app.login.LoginController;
 import app.user.UserController;
 import app.user.UserRepository;
+import app.util.Path;
 import app.util.viewUtil;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.*;
@@ -20,28 +21,31 @@ public class Main {
         UserController UserController = new UserController(UserRepository);
         Javalin app = Javalin.create(config -> { config.addStaticFiles("/public"); });
 
-
-        app.get("/auth", LoginController.serveLoginPage);
-        app.get("/createAccount", LoginController.serveCreateAccountPage);
-
-        //definition of routes:
-        //TODO:the frontend interaction is not defined for the controller yet!
         app.routes(()-> {
             before(LoginController.ensureLogin);
-            path("auth", ()->{
+            path("/", ()->{
+                get(viewUtil.serveIndexPage);
+            });
+            path(Path.Web.INDEX, ()->{
+                get(viewUtil.serveIndexPage);
+            });
+            path(Path.Web.LOGIN, ()->{
+                get(LoginController.serveLoginPage);
                 path("create",()->{
+                    get(LoginController.serveCreateAccountPage);
                     post(UserController::createUser);
-
-                    get(ctx -> ctx.redirect("/public/login/login.html"));
                 });
             });
-            path("user",()-> {
+
+            //This block of code is currently not used
+            path(Path.Web.USER,()-> {
                 get(UserController::getAll);
                 path(":id", ()-> {
                     delete(UserController::delete);
                     put(UserController::update);
                });
            });
+
         });
 
         app.error(404, viewUtil.notFound);
