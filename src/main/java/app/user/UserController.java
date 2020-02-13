@@ -1,9 +1,12 @@
 package app.user;
 
+import app.login.LoginController;
+import app.util.viewUtil;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -35,9 +38,8 @@ public class UserController {
                 ctx.formParam("phone")
         );
         userRepository.createUser(temp);
-
-        //ctx.sessionAttribute("loginRedirect", ctx.path());
-        ctx.render("public/login/login.html");
+        Map<String, Object> model = viewUtil.baseModel(ctx);
+        ctx.render("/velocity/login/login.vm", model);
         ctx.status(201);
     }
 

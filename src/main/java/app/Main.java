@@ -2,6 +2,7 @@ package app;
 import app.login.LoginController;
 import app.user.UserController;
 import app.user.UserRepository;
+import app.util.viewUtil;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.*;
 
@@ -19,13 +20,9 @@ public class Main {
         UserController UserController = new UserController(UserRepository);
         Javalin app = Javalin.create(config -> { config.addStaticFiles("/public"); });
 
-        //before -> direct to login page
-        app.get("/auth", ctx -> {
-            ctx.render("/public/login/login.html");
-        });
-        app.get("/createAccount", ctx-> {
-           ctx.render("/public/login/createAccount.html");
-        });
+
+        app.get("/auth", LoginController.serveLoginPage);
+        app.get("/createAccount", LoginController.serveCreateAccountPage);
 
         //definition of routes:
         //TODO:the frontend interaction is not defined for the controller yet!
@@ -47,11 +44,11 @@ public class Main {
            });
         });
 
-        app.error(404, ctx -> ctx.result("Your requested Page is not found!"));
+        app.error(404, viewUtil.notFound);
         app.events(event -> {
             event.serverStopped(() -> {connection.close();});
         });
-        app.start(12000);
+        app.start(10001);
 
     }
 }
