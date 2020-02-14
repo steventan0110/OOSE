@@ -27,7 +27,7 @@ public class Main {
         });
 
 
-        app.get("/about", ctx -> ctx.render("public/userFirst.html"));
+        app.get("/", ctx -> ctx.render("public/index.vm"));
         //definition of routes:
         //TODO:the frontend interaction is not defined for the controller yet!
         app.routes(()-> {
