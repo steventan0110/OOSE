@@ -1,6 +1,7 @@
 package app.user;
 
 import app.login.LoginController;
+import app.util.Path;
 import app.util.viewUtil;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
@@ -39,8 +40,8 @@ public class UserController {
         );
         userRepository.createUser(temp);
         Map<String, Object> model = viewUtil.baseModel(ctx);
-        ctx.render("/velocity/login/login.vm", model);
-        ctx.status(201);
+        ctx.redirect(Path.Web.LOGIN);
+
     }
 
     public void update(Context ctx) throws SQLException, UserNotFoundException {

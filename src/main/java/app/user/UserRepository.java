@@ -1,5 +1,7 @@
 package app.user;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,17 @@ public class UserRepository {
         pst.close();
     }
 
+    public Boolean authenticate(String email, String password) throws SQLException {
+        String sql = "SELECT * FROM users WHERE users.email = ? AND users.password = ?";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1, email);
+        pst.setString(2, password);
+        ResultSet rs = pst.executeQuery();
+        boolean flag = rs.next();
+        pst.close();
+        return flag;
+    }
+
     public User getOneUser(int id) throws SQLException, UserNotFoundException {
         String oneUserURL = "SELECT * FROM users WHERE id = ?";
         PreparedStatement pst = connection.prepareStatement(oneUserURL);
@@ -62,6 +75,26 @@ public class UserRepository {
             pst.close();
             rs.close();
         }
+    }
+
+    //for login purpose, we query user using email and password
+    public User getOneUser(String email, String password) throws SQLException {
+        String oneUserURL = "SELECT * FROM users WHERE users.email = ? AND users.password = ?";
+        PreparedStatement pst = connection.prepareStatement(oneUserURL);
+        pst.setString(1, email);
+        pst.setString(2, password);
+        ResultSet rs = pst.executeQuery();
+        rs.next();
+        User temp = new User(
+                rs.getString("name"),
+                rs.getString("Password"),
+                rs.getString("email"),
+                rs.getInt("role"),
+                rs.getString("phone")
+        );
+        pst.close();
+        rs.close();
+        return temp;
     }
 
     public List<User> getAll() throws SQLException {

@@ -168,4 +168,30 @@ public class UserRepositoryTest {
         List<User> allUser = unit.getAll();
         assertEquals(0, allUser.size());
     }
+
+    @Test
+    public void authenticateWorksUser() throws SQLException {
+        User user = new User(
+                "Steven",
+                "1234567",
+                "abc@gmail.com",
+                1,
+                "1029340144"
+        );
+        unit.createUser(user);
+        assertTrue(unit.authenticate("abc@gmail.com", "1234567"));
+    }
+
+    @Test
+    public void authenticateWorksNonUser() throws SQLException {
+        User user = new User(
+                "Steven",
+                "1234567",
+                "abc@gmail.com",
+                1,
+                "1029340144"
+        );
+        unit.createUser(user);
+        assertFalse(unit.authenticate("ab@gmail.com", "1234567"));
+    }
 }
