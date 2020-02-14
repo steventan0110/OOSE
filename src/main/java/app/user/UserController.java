@@ -41,8 +41,8 @@ public class UserController {
         );
         userRepository.createUser(temp);
         Map<String, Object> model = viewUtil.baseModel(ctx);
-        ctx.render("/velocity/login/login.vm", model);
-        ctx.status(201);
+        ctx.redirect(Path.Web.LOGIN);
+
     }
 
     public void update(Context ctx) throws SQLException, UserNotFoundException {
